@@ -1,14 +1,33 @@
-if !exists("g:notez_diary_dir")
-    let g:notez_diary_dir="~/.notes"
+if !exists("g:notez_journal_dir")
+    " TODO: ask for permission to create this dir or make it a requirement
+    let g:notez_journal_dir="~/.notes/journal"
 endif
+
+function! notez#SetupJournal()
+    let lastweekn = substitute(system('date -d "last week" +%V'),"\\n","","")
+    let nextweekn = substitute(system('date -d "next week" +%V'),"\\n","","")
+    call setline(1, "# Journal for Week #" . expand('%:r') . ' (started on ' . strftime("%Y-%M-%d") . ')')
+    call setline(2, "<!-- [" . lastweekn . ".md] - [" . nextweekn . ".md] -->")
+    call setline(3, "*")
+    exe "normal! G"
+    startinsert!
+endfunction
+
+augroup notez#Journal
+    " TODO: can we move the autocmd-pattern higher to reduce repeat.
+    "au BufNewFile *.md if expand('%:p') =~ expand(g:notez_journal_dir) | 0r <sfile>:p:h:h/templates/journal.md
+    au BufNewFile *.md if expand('%:p') =~ expand(g:notez_journal_dir) | :call notez#SetupJournal()
+    
+    " https://stackoverflow.com/questions/12094708/include-a-directory-recursively-for-vim-autocompletion
+    "au VimEnter *.md if expand('%:p') =~ expand(g:notez_journal_dir) | set complete=k/journal/*
+augroup end
 
 function! notez#Hello()
     echom "Hello, world!"
 endfunction
 
-function! notez#OpenDiary()
+function! notez#OpenJournal()
     let weekn = substitute(system('date +%V'),"\\n","","")
-    execute 'cd ' . g:notez_diary_dir
-    execute ':edit diary/' . weekn . '.md'
-    " TODO: diary dir does not exist? add dynamic template if new file
+    execute 'cd ' . g:notez_journal_dir
+    execute ':edit ' . weekn . '.md'
 endfunction
