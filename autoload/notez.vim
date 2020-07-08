@@ -22,10 +22,6 @@ augroup notez#Journal
     "au VimEnter *.md if expand('%:p') =~ expand(g:notez_journal_dir) | set complete=k/journal/*
 augroup end
 
-function! notez#Hello()
-    echom "Hello, world!"
-endfunction
-
 function! notez#OpenJournal()
     let weekn = substitute(system('date +%V'),"\\n","","")
     execute 'cd ' . g:notez_journal_dir
