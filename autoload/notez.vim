@@ -1,7 +1,3 @@
-if !exists("g:notez_journal_dir")
-    " TODO: ask for permission to create this dir or make it a requirement
-    let g:notez_journal_dir="~/.notes/journal"
-endif
 
 function! notez#SetupJournal()
     let lastweekn = substitute(system('date -d "last week" +%V'),"\\n","","")
