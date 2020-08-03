@@ -20,5 +20,8 @@ let s:plugin_dir = expand('<sfile>:p:h:h')
 command! -nargs=1 NewNote call notez#NewNote(<q-args>)
 command! -nargs=0 OpenNotezJournal call notez#OpenJournal()
 
+command! -nargs=0 NextNotezJournal call notez#NextJournal()
+command! -nargs=0 PrevNotezJournal call notez#PrevJournal()
+
 nnoremap <localleader>nn :NewNote
 nnoremap <localleader>od :OpenNotezJournal<CR>
