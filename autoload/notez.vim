@@ -6,6 +6,7 @@ endfunction
 
 augroup notez#Journal
     au BufNewFile *.md if expand('%:p') =~ expand(g:notez_journal_dir) | :call notez#SetupJournal()
+    au BufWritePost *.md if expand('%:p') =~ expand(g:notez_journal_dir) | :silent! execute '!git -C '.g:notez_dir.' add \*.md; git -C '.g:notez_dir.' diff-index --quiet HEAD || git -C '.g:notez_dir.' commit -q --no-status -m %;'
 augroup end
 
 function! notez#OpenJournal()
