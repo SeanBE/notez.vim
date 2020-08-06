@@ -21,8 +21,10 @@ endif
 let s:plugin_dir = expand('<sfile>:p:h:h')
 
 " use quoted args for filename arg
-command! -nargs=1 NewNote call notez#NewNote(<q-args>)
+command! -nargs=1 NewNotez call notez#NewNote(<q-args>)
 command! -nargs=0 OpenNotezJournal call notez#OpenJournal()
+command! -nargs=0 OpenNotezTodo call notez#OpenTodo()
 
-nnoremap <localleader>nn :NewNote
+nnoremap <localleader>nn :NewNotez<Space>
+nnoremap <localleader>ot :OpenNotezTodo<CR>
 nnoremap <localleader>od :OpenNotezJournal<CR>

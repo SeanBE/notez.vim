@@ -1,4 +1,3 @@
-
 function! notez#SetupJournal()
     call setline(1, "# Journal for " . expand('%:r') . ' (started on ' . strftime("%Y-%m-%d") . ')')
     exe "normal! o"
@@ -13,10 +12,14 @@ function! s:setJournalCommands()
 endfunction
 
 function! s:commit_to_git()
+    " add all in directory. gitignore only accepts itself + .md
+    " based off https://opensource.com/article/18/6/vimwiki-gitlab-notes
+    " https://vi.stackexchange.com/questions/3060/suppress-output-from-a-vim-autocomand
     silent! execute '!git -C '.g:notez_dir.' add \*.md; git -C '.g:notez_dir.' diff-index --quiet HEAD || git -C '.g:notez_dir.' commit -q --no-status -m %;'
 endfunction
 
 function! s:path_inside_journal_dir()
+    " https://stackoverflow.com/questions/12094708/include-a-directory-recursively-for-vim-autocompletion
     return expand('%:p') =~ expand(g:notez_journal_dir)
 endfunction
 
@@ -31,6 +34,11 @@ function! notez#OpenJournal()
     exe 'cd ' . g:notez_journal_dir
     let filename = substitute(system('date +%Ywk%V'),"\\n","","")
     exe ':e ' . filename . '.md'
+endfunction
+
+function! notez#OpenTodo()
+    exe 'cd ' . g:notez_journal_dir
+    exe ':e TODO.md'
 endfunction
 
 function! s:parse_journal_filename(fname)
@@ -54,3 +62,9 @@ function! notez#NextJournal()
     let filename = substitute(system('date -d "' . start_of_week . ' + 7 days" +%Ywk%V'),"\\n","","")
     exe ':e ' . filename . '.md'
 endfunction
+
+function! notez#NewNote(filename)
+    echom a:filename
+
+endfunction
+
