@@ -4,9 +4,27 @@ function! notez#SetupJournal()
     exe "normal! o"
 endfunction
 
+function! s:setJournalCommands()
+    command! -nargs=0 NextNotezJournal call notez#NextJournal()
+    command! -nargs=0 PrevNotezJournal call notez#PrevJournal()
+    
+    nnoremap <localleader>pj :PrevNotezJournal<CR>
+    nnoremap <localleader>nj :NextNotezJournal<CR>
+endfunction
+
+function! s:commit_to_git()
+    silent! execute '!git -C '.g:notez_dir.' add \*.md; git -C '.g:notez_dir.' diff-index --quiet HEAD || git -C '.g:notez_dir.' commit -q --no-status -m %;'
+endfunction
+
+function! s:path_inside_journal_dir()
+    return expand('%:p') =~ expand(g:notez_journal_dir)
+endfunction
+
 augroup notez#Journal
-    au BufNewFile *.md if expand('%:p') =~ expand(g:notez_journal_dir) | :call notez#SetupJournal()
-    au BufWritePost *.md if expand('%:p') =~ expand(g:notez_journal_dir) | :silent! execute '!git -C '.g:notez_dir.' add \*.md; git -C '.g:notez_dir.' diff-index --quiet HEAD || git -C '.g:notez_dir.' commit -q --no-status -m %;'
+    autocmd!
+    au BufNewFile *.md if s:path_inside_journal_dir() | :call notez#SetupJournal()
+    au BufWritePost *.md if s:path_inside_journal_dir() | :call s:commit_to_git()
+    au BufNew,BufEnter *.md if s:path_inside_journal_dir() | :call s:setJournalCommands()
 augroup end
 
 function! notez#OpenJournal()
