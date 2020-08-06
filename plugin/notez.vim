@@ -12,8 +12,8 @@ if !exists("g:notez_journal_dir")
     let g:notez_journal_dir= g:notez_dir . "/journal"
 endif
 
-if !isdirectory(g:notez_dir) || !isdirectory(g:notez_journal_dir)
-    echomsg "g:notez_dir or g:notez_journal_dir does not exist. Make it first!"
+if !isdirectory(expand(g:notez_dir)) || !isdirectory(expand(g:notez_journal_dir))
+    echomsg "Notez:vim: Directories ".g:notez_dir." or ".g:notez_journal_dir." do not exist. Make sure they exist first!"
     finish
 endif
 
