@@ -4,13 +4,17 @@ if exists('g:loaded_notez') || &compatible
 endif
 let g:loaded_notez = 1
 
-" TODO: ask for permission to create these dir or make it a requirement
 if !exists("g:notez_dir")
     let g:notez_dir="~/.notes"
 endif
 
 if !exists("g:notez_journal_dir")
     let g:notez_journal_dir= g:notez_dir . "/journal"
+endif
+
+if !isdirectory(g:notez_dir) || !isdirectory(g:notez_journal_dir)
+    echomsg "g:notez_dir or g:notez_journal_dir does not exist. Make it first!"
+    finish
 endif
 
 " get notez.dir absolute path
