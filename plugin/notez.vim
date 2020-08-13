@@ -25,11 +25,20 @@ endif
 " get notez.dir absolute path
 let s:plugin_dir = expand('<sfile>:p:h:h')
 
-" use quoted args for filename arg
-command! -nargs=1 NewNotez call notez#NewNote(<q-args>)
-command! -nargs=0 OpenNotezJournal call notez#OpenJournal()
-command! -nargs=0 OpenNotezTodo call notez#OpenTodo()
+" init global cmds
+command! -nargs=1 NewNotez          call notez#NewNote(<q-args>)
+command! -nargs=0 OpenNotezJournal  call notez#OpenJournal()
+command! -nargs=0 OpenNotezTodo     call notez#OpenTodo()
 
-nnoremap <localleader>nn :NewNotez<Space>
-nnoremap <localleader>ot :OpenNotezTodo<CR>
-nnoremap <localleader>od :OpenNotezJournal<CR>
+
+" init mappings
+nnoremap <silent> <Plug>(Notez-NewNote)         :NewNotez<Space>
+nnoremap <silent> <Plug>(Notez-OpenTodo)        :OpenNotezTodo<CR>
+nnoremap <silent> <Plug>(Notez-OpenJournal)     :OpenNotezJournal<CR>
+
+" apply defaults
+if get(g:, "notez_default_mapping", 1)
+    nmap <silent> <localleader>nn    <Plug>(Notez-NewNote)
+    nmap <silent> <localleader>ot    <Plug>(Notez-OpenTodo)
+    nmap <silent> <localleader>od    <Plug>(Notez-OpenJournal)
+endif
