@@ -17,6 +17,11 @@ if !isdirectory(expand(g:notez_dir)) || !isdirectory(expand(g:notez_journal_dir)
     finish
 endif
 
+if !exists('*fzf#run') || !executable('rg')
+    echoerr '`fzf` and `rg` must be installed.'
+    finish
+endif
+
 " get notez.dir absolute path
 let s:plugin_dir = expand('<sfile>:p:h:h')
 
