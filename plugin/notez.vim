@@ -27,8 +27,6 @@ let s:plugin_dir = expand('<sfile>:p:h:h')
 
 " init global cmds
 command! -nargs=1 NewNotez          call notez#NewNote(<q-args>)
-command! -nargs=0 OpenNotezJournal  call notez#OpenJournal()
-command! -nargs=0 OpenNotezTodo     call notez#OpenTodo()
 
 " TODO: open fzf window for full word search
 command! -nargs=0 SearchNotes       call notez#SearchNotes()
@@ -42,13 +40,13 @@ command! -nargs=0 SearchTags        call notez#SearchTags()
 
 " init mappings
 nnoremap <Plug>(Notez-NewNote)                  :NewNotez<Space>
-nnoremap <silent> <Plug>(Notez-OpenTodo)        :OpenNotezTodo<CR>
-nnoremap <silent> <Plug>(Notez-OpenJournal)     :OpenNotezJournal<CR>
 nnoremap <silent> <Plug>(Notez-SearchNotes)     :SearchNotes<CR>
+nnoremap <silent> <Plug>(Notez-OpenTodo)        :call notez#OpenTodo()<CR>
+nnoremap <silent> <Plug>(Notez-OpenJournal)     :call notez#OpenJournal()<CR>
 
 " apply defaults
-let g:notez_default_mappings = get(g:, "notez_default_mappings", 1)
-if g:notez_default_mappings
+let g:notez_nomap = get(g:, "notez_nomap", 1)
+if g:notez_nomap
     nmap <localleader>nn             <Plug>(Notez-NewNote)
     nmap <silent> <localleader>nt    <Plug>(Notez-OpenTodo)
     nmap <silent> <localleader>nd    <Plug>(Notez-OpenJournal)

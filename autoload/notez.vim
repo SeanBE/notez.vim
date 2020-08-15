@@ -6,13 +6,13 @@ endfunction
 function! s:setJournalCommands() abort " {{{1
     nnoremap <Plug>(Notez-NextJournal) :call notez#NextJournal()<CR>
     nnoremap <Plug>(Notez-PrevJournal) :call notez#PrevJournal()<CR>
-    if g:notez_default_mappings
+    if g:notez_nomap
         nmap <localleader>n] <Plug>(Notez-NextJournal)
         nmap <localleader>n[ <Plug>(Notez-PrevJournal)
     endif
 endfunction
 
-function! s:commit_to_git()
+function! s:commit_to_git() abort " {{{1
     " add all in directory. gitignore only accepts itself + .md
     " based off https://opensource.com/article/18/6/vimwiki-gitlab-notes
     " https://vi.stackexchange.com/questions/3060/suppress-output-from-a-vim-autocomand
@@ -24,25 +24,25 @@ function! s:path_inside_journal_dir()
     return expand('%:p') =~ expand(g:notez_journal_dir)
 endfunction
 
-augroup notez#Journal
+augroup notez#Journal " {{{1
     autocmd!
     au BufNewFile *.md if s:path_inside_journal_dir() | :call notez#SetupJournal()
     au BufWritePost *.md if s:path_inside_journal_dir() | :call s:commit_to_git()
     au BufNew,BufEnter *.md if s:path_inside_journal_dir() | :call s:setJournalCommands()
 augroup end
 
-function! notez#OpenJournal()
+function! notez#OpenJournal() abort " {{{1
     exe 'cd ' . g:notez_journal_dir
     let filename = substitute(system('date +%Ywk%V'),"\\n","","")
     exe ':e ' . filename . '.md'
 endfunction
-
-function! notez#OpenTodo()
+ 
+function! notez#OpenTodo() abort " {{{1
     exe 'cd ' . g:notez_journal_dir
     exe ':e TODO.md'
 endfunction
 
-function! s:parse_journal_filename(fname)
+function! s:parse_journal_filename(fname) abort " {{{1
     let l:year=strpart(a:fname, 0, 4)
     let l:week=strpart(a:fname, 6, 2)
     " httpsgg://stackoverflow.com/a/46002400
