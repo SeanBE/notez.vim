@@ -3,12 +3,13 @@ function! notez#SetupJournal()
     exe "normal! o"
 endfunction
 
-function! s:setJournalCommands()
-    command! -nargs=0 NextNotezJournal call notez#NextJournal()
-    command! -nargs=0 PrevNotezJournal call notez#PrevJournal()
-    
-    nnoremap <localleader>pj :PrevNotezJournal<CR>
-    nnoremap <localleader>nj :NextNotezJournal<CR>
+function! s:setJournalCommands() abort " {{{1
+    nnoremap <Plug>(Notez-NextJournal) :call notez#NextJournal()<CR>
+    nnoremap <Plug>(Notez-PrevJournal) :call notez#PrevJournal()<CR>
+    if g:notez_default_mappings
+        nmap <localleader>n] <Plug>(Notez-NextJournal)
+        nmap <localleader>n[ <Plug>(Notez-PrevJournal)
+    endif
 endfunction
 
 function! s:commit_to_git()

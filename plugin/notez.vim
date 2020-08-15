@@ -30,15 +30,27 @@ command! -nargs=1 NewNotez          call notez#NewNote(<q-args>)
 command! -nargs=0 OpenNotezJournal  call notez#OpenJournal()
 command! -nargs=0 OpenNotezTodo     call notez#OpenTodo()
 
+" TODO: open fzf window for full word search
+command! -nargs=0 SearchNotes       call notez#SearchNotes()
+" TODO: open fzf window with whats under cursor (share with above command?)
+"command! -nargs=0 SearchInNotes    call notez#SearchInNotes(<q-args>)
+" TODO: open fzf to search for all ctags generated
+command! -nargs=0 SearchTags        call notez#SearchTags()
+" TODO: fzf window with results
+"command! -nargs=0 SearchForTag     call notez#SearchForTag()
+" TODO: some command to link other files?
 
 " init mappings
-nnoremap <silent> <Plug>(Notez-NewNote)         :NewNotez<Space>
+nnoremap <Plug>(Notez-NewNote)                  :NewNotez<Space>
 nnoremap <silent> <Plug>(Notez-OpenTodo)        :OpenNotezTodo<CR>
 nnoremap <silent> <Plug>(Notez-OpenJournal)     :OpenNotezJournal<CR>
+nnoremap <silent> <Plug>(Notez-SearchNotes)     :SearchNotes<CR>
 
 " apply defaults
-if get(g:, "notez_default_mapping", 1)
-    nmap <silent> <localleader>nn    <Plug>(Notez-NewNote)
-    nmap <silent> <localleader>ot    <Plug>(Notez-OpenTodo)
-    nmap <silent> <localleader>od    <Plug>(Notez-OpenJournal)
+let g:notez_default_mappings = get(g:, "notez_default_mappings", 1)
+if g:notez_default_mappings
+    nmap <localleader>nn             <Plug>(Notez-NewNote)
+    nmap <silent> <localleader>nt    <Plug>(Notez-OpenTodo)
+    nmap <silent> <localleader>nd    <Plug>(Notez-OpenJournal)
+    nmap <silent> <localleader>nf    <Plug>(Notez-SearchNotes)
 endif
