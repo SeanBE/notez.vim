@@ -15,31 +15,32 @@ endfunction
 function! s:commit_to_git() abort " {{{1
     " add all in directory. gitignore only accepts itself + .md
     " based off https://opensource.com/article/18/6/vimwiki-gitlab-notes
-    " https://vi.stackexchange.com/questions/3060/suppress-output-from-a-vim-autocomand
-    silent! execute '!git -C '.g:notez_dir.' add \*.md; git -C '.g:notez_dir.' diff-index --quiet HEAD || git -C '.g:notez_dir.' commit -q --no-status -m %;'
+    let l:git_cmd = '!git -C '.g:notez_dir
+    silent! execute l:git_cmd.' add \*.md; ' 
+                \ l:git_cmd.' diff-index --quiet HEAD || '
+                \ l:git_cmd.' commit -q --no-status -m %;'
 endfunction
 
-function! s:path_inside_journal_dir()
-    " https://stackoverflow.com/questions/12094708/include-a-directory-recursively-for-vim-autocompletion
-    return expand('%:p') =~ expand(g:notez_journal_dir)
+function! s:path_inside(dir) abort " {{{1
+    return expand('%:p') =~ expand(a:dir)
 endfunction
 
 augroup notez#Journal " {{{1
     autocmd!
-    au BufNewFile *.md if s:path_inside_journal_dir() | :call notez#SetupJournal()
-    au BufWritePost *.md if s:path_inside_journal_dir() | :call s:commit_to_git()
-    au BufNew,BufEnter *.md if s:path_inside_journal_dir() | :call s:setJournalCommands()
+    au BufWritePost *.md if s:path_inside(g:notez_dir) | :call s:commit_to_git()
+    au BufNewFile *.md if s:path_inside(g:notez_journal_dir) | :call notez#SetupJournal()
+    au BufNew,BufEnter *.md if s:path_inside(g:notez_journal_dir) | :call s:setJournalCommands()
 augroup end
 
 function! notez#OpenJournal() abort " {{{1
     exe 'cd ' . g:notez_journal_dir
-    let filename = substitute(system('date +%Ywk%V'),"\\n","","")
-    exe ':e ' . filename . '.md'
+    let l:filename = printf("%s.md", substitute(system('date +%Ywk%V'),"\\n","",""))
+    exe 'edit '.l:filename
 endfunction
  
 function! notez#OpenTodo() abort " {{{1
     exe 'cd ' . g:notez_journal_dir
-    exe ':e TODO.md'
+    exe 'edit TODO.md'
 endfunction
 
 function! s:parse_journal_filename(fname) abort " {{{1
@@ -50,14 +51,14 @@ function! s:parse_journal_filename(fname) abort " {{{1
     return l:start_of_week
 endfunction
 
-function! notez#PrevJournal()
+function! notez#PrevJournal() abort " {{{1
     let l:current = expand('%:t:r')
     let l:start_of_week = s:parse_journal_filename(current)
     let filename = substitute(system('date -d "' . start_of_week . ' - 7 days" +%Ywk%V'),"\\n","","")
-    exe ':e ' . filename . '.md'
+    exe 'edit '.printf("%s.md", filename)
 endfunction
 
-function! notez#NextJournal()
+function! notez#NextJournal() abort " {{{1
     let l:current = expand('%:t:r')
     let l:start_of_week = s:parse_journal_filename(current)
     let filename = substitute(system('date -d "' . start_of_week . ' + 7 days" +%Ywk%V'),"\\n","","")
