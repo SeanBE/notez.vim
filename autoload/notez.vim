@@ -1,5 +1,8 @@
-function! notez#SetupJournal()
-    call setline(1, "# Journal for " . expand('%:r') . ' (started on ' . strftime("%Y-%m-%d") . ')')
+
+function! notez#SetupJournal() abort " {{{1
+    let l:note_path = expand('%:r')
+    let l:top_line = printf("# Journal for %s (created at %s)", l:note_path, strftime(s:date_fmt))
+    call setline(1, l:top_line)
     exe "normal! o"
 endfunction
 
@@ -62,11 +65,17 @@ function! notez#NextJournal() abort " {{{1
     let l:current = expand('%:t:r')
     let l:start_of_week = s:parse_journal_filename(current)
     let filename = substitute(system('date -d "' . start_of_week . ' + 7 days" +%Ywk%V'),"\\n","","")
-    exe ':e ' . filename . '.md'
+    exe 'edit '.printf("%s.md", filename)
 endfunction
 
-function! notez#NewNote(filename)
-    echom a:filename
+function! notez#NewNote(filename) abort " {{{1
+    exe 'cd ' . g:notez_dir
+    let l:filename_with_ts = printf("%s-%s.md", 
+                \ substitute(a:filename, " ", "_", ""), 
+                \ strftime("%Y-%m-%d-%H%M"))
+    exe "edit ".filename_with_ts
+endfunction
+
 
 endfunction
 
