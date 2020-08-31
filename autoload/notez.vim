@@ -33,9 +33,20 @@ function! s:commit_to_git() abort " {{{1
     " add all in directory. gitignore only accepts itself + .md
     " based off https://opensource.com/article/18/6/vimwiki-gitlab-notes
     let l:git_cmd = 'git -C '.g:notez_dir
-    silent! execute '!'.l:git_cmd.' add \*.md; ' 
+    silent! execute '!'.l:git_cmd.' add \*.md; '
                 \ l:git_cmd.' diff-index --quiet HEAD || '
                 \ l:git_cmd.' commit -q --no-status -m %;'
+endfunction
+
+function! s:run_ctags() abort " {{{1
+    let l:ctags_cmd = join([
+                \ 'ctags -a --recurse',
+                \ '--langdef=notezmd',
+                \ '--languages=notezmd',
+                \ '--langmap=notezmd:.md',
+                \ '--mline-regex-notezmd="/(^|[[:space:]])@(\w\S*)/\2/t/{mgroup=1}"'
+                \])
+    silent let ctags_out = system(ctags_cmd)
 endfunction
 
 function! s:setupNotez() abort " {{{1
@@ -60,7 +71,7 @@ function! notez#OpenJournal() abort " {{{1
     let l:filename = printf("%s.md", substitute(system('date +%Ywk%V'),"\\n","",""))
     exe 'edit 'g:notez_journal_dir.'/'.l:filename
 endfunction
- 
+
 function! s:parse_journal_filename(fname) abort " {{{1
     let l:year=strpart(a:fname, 0, 4)
     let l:week=strpart(a:fname, 6, 2)
@@ -85,8 +96,8 @@ endfunction
 
 function! notez#NewNote(filename) abort " {{{1
     exe 'cd ' . g:notez_dir
-    let l:filename_with_ts = printf("%s-%s.md", 
-                \ substitute(a:filename, " ", "_", ""), 
+    let l:filename_with_ts = printf("%s-%s.md",
+                \ substitute(a:filename, " ", "_", ""),
                 \ strftime("%Y-%m-%d-%H%M"))
     exe "edit ".filename_with_ts
 endfunction

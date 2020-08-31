@@ -30,17 +30,17 @@ command! -nargs=1 NewNotez          call notez#NewNote(<q-args>)
 
 " init mappings
 nnoremap <Plug>(Notez-NewNote)                  :NewNotez<Space>
-nnoremap <silent> <Plug>(Notez-OpenTodo)        :call notez#OpenTodo()<CR>
-nnoremap <silent> <Plug>(Notez-SearchTags)      :call notez#SearchTags<CR>
-nnoremap <silent> <Plug>(Notez-SearchNotes)     :call notez#SearchNotes<CR>
+nnoremap <silent> <Plug>(Notez-SearchTags)      :call notez#SearchTags()<CR>
+nnoremap <silent> <Plug>(Notez-SearchFiles)     :call notez#SearchFiles()<CR>
+nnoremap <silent> <Plug>(Notez-SearchNotes)      :call notez#SearchNotes()<CR>
 nnoremap <silent> <Plug>(Notez-OpenJournal)     :call notez#OpenJournal()<CR>
 
 " apply defaults
 let g:notez_nomap = get(g:, "notez_nomap", 1)
 if g:notez_nomap
     nmap <localleader>nn             <Plug>(Notez-NewNote)
-    nmap <silent> <localleader>nt    <Plug>(Notez-OpenTodo)
     nmap <silent> <localleader>nd    <Plug>(Notez-OpenJournal)
-    nmap <silent> <localleader>nf    <Plug>(Notez-SearchNotes)
+    nmap <silent> <localleader>nf    <Plug>(Notez-SearchFiles)
+    nmap <silent> <localleader>ns    <Plug>(Notez-SearchNotes)
     nmap <silent> <localleader>nt    <Plug>(Notez-SearchTags)
 endif
