@@ -14,7 +14,7 @@ function! s:get_visual_selection() abort " {{{1
 endfunction
 
 function! notez#SetupJournal() abort " {{{1
-    let l:note_path = expand('%:r')
+    let l:note_path = expand('%:t:r')
     let l:top_line = printf("# Journal for %s (created at %s)", l:note_path, strftime(s:date_fmt))
     call setline(1, l:top_line)
     exe "normal! o"
@@ -49,22 +49,18 @@ endfunction
 augroup notez#Journal " {{{1
     autocmd!
     au BufWritePost *.md if s:path_inside(g:notez_dir) | :call s:commit_to_git()
+    au BufWritePost *.md if s:path_inside(g:notez_dir) | :call s:run_ctags()
     au BufNew,BufEnter *.md if s:path_inside(g:notez_dir) | :call s:setupNotez()
     au BufNewFile *.md if s:path_inside(g:notez_journal_dir) | :call notez#SetupJournal()
     au BufNew,BufEnter *.md if s:path_inside(g:notez_journal_dir) | :call s:setJournalCommands()
 augroup end
 
 function! notez#OpenJournal() abort " {{{1
-    exe 'cd ' . g:notez_journal_dir
+    exe 'cd ' . g:notez_dir
     let l:filename = printf("%s.md", substitute(system('date +%Ywk%V'),"\\n","",""))
-    exe 'edit '.l:filename
+    exe 'edit 'g:notez_journal_dir.'/'.l:filename
 endfunction
  
-function! notez#OpenTodo() abort " {{{1
-    exe 'cd ' . g:notez_journal_dir
-    exe 'edit TODO.md'
-endfunction
-
 function! s:parse_journal_filename(fname) abort " {{{1
     let l:year=strpart(a:fname, 0, 4)
     let l:week=strpart(a:fname, 6, 2)
@@ -77,14 +73,14 @@ function! notez#PrevJournal() abort " {{{1
     let l:current = expand('%:t:r')
     let l:start_of_week = s:parse_journal_filename(current)
     let filename = substitute(system('date -d "' . start_of_week . ' - 7 days" +%Ywk%V'),"\\n","","")
-    exe 'edit '.printf("%s.md", filename)
+    exe 'edit '.printf("%s/%s.md", g:notez_journal_dir, filename)
 endfunction
 
 function! notez#NextJournal() abort " {{{1
     let l:current = expand('%:t:r')
     let l:start_of_week = s:parse_journal_filename(current)
     let filename = substitute(system('date -d "' . start_of_week . ' + 7 days" +%Ywk%V'),"\\n","","")
-    exe 'edit '.printf("%s.md", filename)
+    exe 'edit '.printf("%s/%s.md", g:notez_journal_dir, filename)
 endfunction
 
 function! notez#NewNote(filename) abort " {{{1
