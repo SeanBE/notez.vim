@@ -24,8 +24,8 @@ function! s:setJournalCommands() abort " {{{1
     nnoremap <Plug>(Notez-NextJournal) :call notez#NextJournal()<CR>
     nnoremap <Plug>(Notez-PrevJournal) :call notez#PrevJournal()<CR>
     if g:notez_nomap
-        nmap <localleader>n] <Plug>(Notez-NextJournal)
-        nmap <localleader>n[ <Plug>(Notez-PrevJournal)
+        nmap <buffer> <localleader>n] <Plug>(Notez-NextJournal)
+        nmap <buffer> <localleader>n[ <Plug>(Notez-PrevJournal)
     endif
 endfunction
 
