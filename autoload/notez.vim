@@ -102,17 +102,21 @@ function! notez#NewNote(filename) abort " {{{1
     exe "edit ".filename_with_ts
 endfunction
 
-" {{{1
-
-function notez#SearchFiles() abort
+function notez#SearchFiles() abort " {{{1
     " wrapping it takes any fzf configuration the user may have.
-    call fzf#run(fzf#wrap({
-                \ 'source': 'rg --files -t md', 
-                \ 'dir': g:notez_dir, 
-                \ 'sink': 'e', 
-                \ 'options': '--reverse --preview'
-                \ }))
+    " initial objective was to lcd to g:notez_dir via autocmd or sink
+    " function...this isn't possible because of the following
+    " READ THIS FIRST: https://github.com/junegunn/fzf/blob/master/plugin/fzf.vim#L502
+    call fzf#run(fzf#wrap(fzf#vim#with_preview({
+                \ 'sink': 'e',
+                \ 'down': '35%',
+                \ 'dir': g:notez_dir,
+                \ 'options': '--reverse',
+                \ 'source': 'rg --files -t md',
+                \ })))
 endfunction
+
+" {{{1
 
 function! notez#SearchNotes() abort
     " TODO: Search for whole word
