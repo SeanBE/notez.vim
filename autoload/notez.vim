@@ -59,11 +59,11 @@ endfunction
 
 augroup notez#Journal " {{{1
     autocmd!
-    au BufWritePost *.md if s:path_inside(g:notez_dir) | :call s:commit_to_git()
-    au BufWritePost *.md if s:path_inside(g:notez_dir) | :call s:run_ctags()
-    au BufNew,BufEnter *.md if s:path_inside(g:notez_dir) | :call s:setupNotez()
-    au BufNewFile *.md if s:path_inside(g:notez_journal_dir) | :call notez#SetupJournal()
-    au BufNew,BufEnter *.md if s:path_inside(g:notez_journal_dir) | :call s:setJournalCommands()
+    au BufWritePost *.md if s:path_inside(g:notez_dir) | :call s:run_ctags() | endif
+    au BufWritePost *.md if s:path_inside(g:notez_dir) | :call s:commit_to_git() | endif
+    au BufNew,BufEnter *.md if s:path_inside(g:notez_dir) | :call s:setupNotez() | endif
+    au BufNewFile *.md if s:path_inside(g:notez_journal_dir) | :call notez#SetupJournal() | endif
+    au BufNew,BufEnter *.md if s:path_inside(g:notez_journal_dir) | :call s:setJournalCommands() | endif
 augroup end
 
 function! notez#OpenJournal() abort " {{{1
