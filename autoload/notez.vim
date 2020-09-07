@@ -117,21 +117,20 @@ function notez#SearchFiles() abort " {{{1
 endfunction
 
 " {{{1
+function! notez#SearchTags() abort
+    " hack to avoid copying common sink
+    let [tags, &tags] = [&tags, '/home/sean/.notes/tags']
+    call fzf#vim#tags('', {
+  \     'down': '40%',
+  \     'options': '--reverse 
+  \                 --prompt "> "
+  \                 --with-nth 1
+  \                 --preview-window="80%"
+  \                 --preview "bat --color=always --style=header,plain,numbers {2}"'
+  \ })
+    let [&tags] = [tags]
+endfunction
 
 function! notez#SearchNotes() abort
     " TODO: Search for whole word
-    call fzf#run(fzf#wrap(fzf#vim#with_preview({
-                \ 'source': 'rg --files -t md', 
-                \ 'dir': g:notez_dir, 
-                \ 'sink': 'e', 
-                \ 'down': '35%'
-                \ })))
-endfunction
-
-function! notez#SearchTags() abort
-" TODO: Search tags
-endfunction
-
-function! notez#SearchTODOs() abort
-" TODO: search for TODOs
 endfunction
