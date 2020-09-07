@@ -40,7 +40,7 @@ let g:notez_nomap = get(g:, "notez_nomap", 1)
 if g:notez_nomap
     nmap <localleader>nn             <Plug>(Notez-NewNote)
     nmap <silent> <localleader>nd    <Plug>(Notez-OpenJournal)
-    nmap <silent> <localleader>nf    <Plug>(Notez-SearchFiles)
+    nmap <silent> <localleader>nt    <Plug>(Notez-SearchFiles)
     nmap <silent> <localleader>ns    <Plug>(Notez-SearchNotes)
-    nmap <silent> <localleader>nt    <Plug>(Notez-SearchTags)
+    nmap <silent> <localleader>nr    <Plug>(Notez-SearchTags)
 endif
