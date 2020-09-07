@@ -39,6 +39,9 @@ function! s:commit_to_git() abort " {{{1
 endfunction
 
 function! s:run_ctags() abort " {{{1
+    " TODO: is this the right way..
+    let l:curr_dir = getcwd()
+    execute "lcd ".expand(g:notez_dir)
     let l:ctags_cmd = join([
                 \ 'ctags -a --recurse',
                 \ '--langdef=notezmd',
@@ -46,7 +49,8 @@ function! s:run_ctags() abort " {{{1
                 \ '--langmap=notezmd:.md',
                 \ '--mline-regex-notezmd="/(^|[[:space:]])@(\w\S*)/\2/t/{mgroup=1}"'
                 \])
-    silent let ctags_out = system(ctags_cmd)
+    call system(l:ctags_cmd)
+    execute "lcd ".l:curr_dir
 endfunction
 
 function! s:setupNotez() abort " {{{1
@@ -67,7 +71,6 @@ augroup notez#Journal " {{{1
 augroup end
 
 function! notez#OpenJournal() abort " {{{1
-    exe 'cd ' . g:notez_dir
     let l:filename = printf("%s.md", substitute(system('date +%Ywk%V'),"\\n","",""))
     exe 'edit 'g:notez_journal_dir.'/'.l:filename
 endfunction
@@ -95,8 +98,8 @@ function! notez#NextJournal() abort " {{{1
 endfunction
 
 function! notez#NewNote(filename) abort " {{{1
-    exe 'cd ' . g:notez_dir
-    let l:filename_with_ts = printf("%s-%s.md",
+    let l:filename_with_ts = printf("%s/%s-%s.md",
+                \ g:notez_dir,
                 \ substitute(a:filename, " ", "_", ""),
                 \ strftime("%Y-%m-%d-%H%M"))
     exe "edit ".filename_with_ts
@@ -106,7 +109,7 @@ function notez#SearchFiles() abort " {{{1
     " wrapping it takes any fzf configuration the user may have.
     " initial objective was to lcd to g:notez_dir via autocmd or sink
     " function...this isn't possible because of the following
-    " READ THIS FIRST: https://github.com/junegunn/fzf/blob/master/plugin/fzf.vim#L502
+    " https://github.com/junegunn/fzf/blob/master/plugin/fzf.vim#L502
     call fzf#run(fzf#wrap(fzf#vim#with_preview({
                 \ 'sink': 'e',
                 \ 'down': '35%',
@@ -116,8 +119,7 @@ function notez#SearchFiles() abort " {{{1
                 \ })))
 endfunction
 
-" {{{1
-function! notez#SearchTags() abort
+function! notez#SearchTags() abort " {{{1
     " hack to avoid copying common sink
     let [tags, &tags] = [&tags, '/home/sean/.notes/tags']
     call fzf#vim#tags('', {
@@ -126,11 +128,12 @@ function! notez#SearchTags() abort
   \                 --prompt "> "
   \                 --with-nth 1
   \                 --preview-window="80%"
-  \                 --preview "bat --color=always --style=header,plain,numbers {2}"'
+  \                 --preview "bat --color=always --style=header,plain,numbers '.g:notez_dir.'/{2}"'
   \ })
     let [&tags] = [tags]
 endfunction
 
+" {{{1
 function! notez#SearchNotes() abort
     " TODO: Search for whole word
 endfunction
