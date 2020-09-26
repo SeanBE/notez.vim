@@ -32,7 +32,7 @@ command! -nargs=1 NewNotez          call notez#NewNote(<q-args>)
 nnoremap <Plug>(Notez-NewNote)                  :NewNotez<Space>
 nnoremap <silent> <Plug>(Notez-SearchTags)      :call notez#SearchTags()<CR>
 nnoremap <silent> <Plug>(Notez-SearchFiles)     :call notez#SearchFiles()<CR>
-nnoremap <silent> <Plug>(Notez-SearchNotes)      :call notez#SearchNotes()<CR>
+nnoremap <silent> <Plug>(Notez-SearchNotes)     :call notez#SearchNotes()<CR>
 nnoremap <silent> <Plug>(Notez-OpenJournal)     :call notez#OpenJournal()<CR>
 
 " apply defaults

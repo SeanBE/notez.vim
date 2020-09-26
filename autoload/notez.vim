@@ -39,11 +39,12 @@ function! s:commit_to_git() abort " {{{1
 endfunction
 
 function! s:run_ctags() abort " {{{1
-    " TODO: is this the right way..
+    " TODO: is this the right way ? how long before this slows down?
+    " TODO: what happens if we exit mid process?
     let l:curr_dir = getcwd()
     execute "lcd ".expand(g:notez_dir)
     let l:ctags_cmd = join([
-                \ 'ctags -a --recurse',
+                \ 'ctags --recurse',
                 \ '--langdef=notezmd',
                 \ '--languages=notezmd',
                 \ '--langmap=notezmd:.md',
@@ -121,7 +122,7 @@ endfunction
 
 function! notez#SearchTags() abort " {{{1
     " hack to avoid copying common sink
-    let [tags, &tags] = [&tags, '/home/sean/.notes/tags']
+    let [tags, &tags] = [&tags, expand(g:notez_dir.'/tags')]
     call fzf#vim#tags('', {
   \     'down': '40%',
   \     'options': '--reverse 
@@ -133,7 +134,16 @@ function! notez#SearchTags() abort " {{{1
     let [&tags] = [tags]
 endfunction
 
-" {{{1
-function! notez#SearchNotes() abort
-    " TODO: Search for whole word
+function! notez#SearchNotes() abort " {{{1
+    " Search notes by full word literals using ripgrep.
+    " Using lcd for easiest solution (I think) to hiding the abs path of notes
+    " https://github.com/junegunn/fzf.vim#example-advanced-ripgrep-integration
+    let l:curr_dir = getcwd()
+    execute "lcd ".expand(g:notez_dir)
+    let command_fmt = 'rg -t md -w --line-number --no-heading --color=always --smart-case %s|| true'
+    let initial_command = printf(command_fmt, "\" \"")
+    let reload_command = printf(command_fmt, '{q}')
+    let spec = {'dir': g:notez_dir, 'options': ['--exact', '--phony', '--query', "", '--bind', 'change:reload:'.reload_command]}
+    call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec))
+    execute "lcd ".l:curr_dir
 endfunction
