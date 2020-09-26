@@ -30,14 +30,19 @@ command! -nargs=1 NewNotez          call notez#NewNote(<q-args>)
 
 " init mappings
 nnoremap <Plug>(Notez-NewNote)                  :NewNotez<Space>
+inoremap <expr> <Plug>(Notez-LinkNote)          notez#LinkNote()
 nnoremap <silent> <Plug>(Notez-SearchTags)      :call notez#SearchTags()<CR>
 nnoremap <silent> <Plug>(Notez-SearchFiles)     :call notez#SearchFiles()<CR>
 nnoremap <silent> <Plug>(Notez-SearchNotes)     :call notez#SearchNotes()<CR>
 nnoremap <silent> <Plug>(Notez-OpenJournal)     :call notez#OpenJournal()<CR>
 
+
 " apply defaults
 let g:notez_nomap = get(g:, "notez_nomap", 1)
 if g:notez_nomap
+    # TODO: maybe only map this when in notes dir? or a better mapping key
+    imap <c-b>                  <Plug>(Notez-LinkNote)
+
     nmap <localleader>nn             <Plug>(Notez-NewNote)
     nmap <silent> <localleader>nd    <Plug>(Notez-OpenJournal)
     nmap <silent> <localleader>nt    <Plug>(Notez-SearchFiles)

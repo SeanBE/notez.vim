@@ -147,3 +147,25 @@ function! notez#SearchNotes() abort " {{{1
     call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec))
     execute "lcd ".l:curr_dir
 endfunction
+
+function! s:make_note_link(l)
+    " fzf#vim#complete returns a list with all info in index 0
+    let line = split(a:l[0], ':')
+    let ztk_id = l:line[0]
+    # extract top title from file
+    let ztk_title = substitute(l:line[1], '\#\s\+', '', 'g')
+    let mdlink = "[" . ztk_title ."](". ztk_id .")"
+    return mdlink
+endfunction
+
+function! notez#LinkNote() abort " {{{1
+    " Search for markdown files that have title starting with #.
+    " Using fzf#complete for fuzzy completion (delegates to fzf#vim#complete)
+    " From comments https://www.edwinwenink.xyz/posts/48-vim_fast_creating_and_linking_notes/
+    return fzf#complete({
+        \ 'dir': g:notez_dir,
+        \ 'source':  'rg -t md --no-heading --smart-case ^\#',
+        \ 'reducer': function('s:make_note_link'),
+        \ 'options': '--reverse',
+        \ 'down': '10%'})
+endfunction
