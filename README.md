@@ -12,6 +12,7 @@ What does this plugin do?
 
 This is a work in progress. I've tried to follow some best practices but I'm 100% confident that a lot of this can be rewritten in a more optimal fashion. This includes:
 * Using location list to toggle between all my journals.
+* Not being a lazy git and completing documentation
 * List goes on.
 
 Would love to hear your feedback, comments, criticism etc. so that the plugin and I can improve :) 

@@ -1,7 +1,7 @@
-*notez.txt* seanBE's notes plugin
+*notez.txt* seanBE's notez plugin
 
 Author: seanBE
 
 INTRODUCTION            *notez*
 
-A plugin for me to learn vimscript...needs scoping.
+A plugin for me to learn vimscript...this needs work.
