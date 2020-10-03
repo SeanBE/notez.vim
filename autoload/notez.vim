@@ -148,11 +148,11 @@ function! notez#SearchNotes() abort " {{{1
     execute "lcd ".l:curr_dir
 endfunction
 
-function! s:make_note_link(l)
+function! s:make_note_link(l) abort " {{{1
     " fzf#vim#complete returns a list with all info in index 0
     let line = split(a:l[0], ':')
     let ztk_id = l:line[0]
-    # extract top title from file
+    " extract top title from file
     let ztk_title = substitute(l:line[1], '\#\s\+', '', 'g')
     let mdlink = "[" . ztk_title ."](". ztk_id .")"
     return mdlink
