@@ -101,7 +101,7 @@ endfunction
 function! notez#NewNote(filename) abort " {{{1
     let l:filename_with_ts = printf("%s/%s-%s.md",
                 \ g:notez_dir,
-                \ substitute(a:filename, " ", "_", ""),
+                \ substitute(a:filename, " ", "_", "g"),
                 \ strftime("%Y-%m-%d-%H%M"))
     exe "edit ".filename_with_ts
 endfunction
