@@ -21,9 +21,10 @@ function! notez#SetupJournal() abort " {{{1
 endfunction
 
 function! s:setJournalCommands() abort " {{{1
+    " TODO: should be set at plugin level..
     nnoremap <Plug>(Notez-NextJournal) :call notez#NextJournal()<CR>
     nnoremap <Plug>(Notez-PrevJournal) :call notez#PrevJournal()<CR>
-    if g:notez_nomap
+    if g:notez_nomap == 0
         nmap <buffer> <localleader>n] <Plug>(Notez-NextJournal)
         nmap <buffer> <localleader>n[ <Plug>(Notez-PrevJournal)
     endif

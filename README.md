@@ -20,12 +20,18 @@ Would love to hear your feedback, comments, criticism etc. so that the plugin an
 
 ### Installation
 This has been tested on Vim 8.2. It requires the `ctags`, `FZF` binary, `FZF` vim plugin, `ripgrep`, and `bat`.
-The plugin has been built to be pathogen compatible. This means you can install it using vim 8+ builtin package manager or one
-of the several 3rd party plugin managers out there.
+The plugin has been built to be pathogen compatible. This means you can install it using vim 8+ builtin package manager or one of the several 3rd party plugin managers out there.
 
 ```vim
 " using vim-plug
 call plug#begin()
 Plug 'seanbe/notez.vim'
 call plug#end()
+
+" To disable the plugin mappings
+let g:notez_nomap = 1
+
+" <localleader>nn to create a note
+" <localleader>nd to open your weekly journal
+" Check out the docs for more.
 ```

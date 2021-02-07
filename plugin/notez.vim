@@ -38,10 +38,11 @@ nnoremap <silent> <Plug>(Notez-OpenJournal)     :call notez#OpenJournal()<CR>
 
 
 " apply defaults
-let g:notez_nomap = get(g:, "notez_nomap", 1)
-if g:notez_nomap
-    " TODO: maybe only map this when in notes dir? or a better mapping key
+let g:notez_nomap = get(g:, "notez_nomap", 0)
+if g:notez_nomap == 0
+    " TODO: better mapping key or use normal mapping..
     imap <c-b>                       <Plug>(Notez-LinkNote)
+
     nmap <localleader>nn             <Plug>(Notez-NewNote)
     nmap <silent> <localleader>nd    <Plug>(Notez-OpenJournal)
     nmap <silent> <localleader>nt    <Plug>(Notez-SearchFiles)
