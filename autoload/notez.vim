@@ -72,8 +72,18 @@ augroup notez#Journal " {{{1
     au BufNew,BufEnter *.md if s:path_inside(g:notez_journal_dir) | :call s:setJournalCommands() | endif
 augroup end
 
+function! s:get_year_week_fmt(...) abort " {{{1
+    let l:date = get(a:, 1, 0)
+    let l:yearWeek = system('date +%Ywk%V')
+    if l:date
+        let l:yearWeek = system('date -d "'.l:date.'" +%Ywk%V')
+    endif
+    return substitute(l:yearWeek,"\\n","","")
+endfunction
+
 function! notez#OpenJournal() abort " {{{1
-    let l:filename = printf("%s.md", substitute(system('date +%Ywk%V'),"\\n","",""))
+    let l:year_week = s:get_year_week_fmt()
+    let l:filename = printf("%s.md", l:year_week)
     exe 'edit 'g:notez_journal_dir.'/'.l:filename
 endfunction
 
@@ -88,15 +98,15 @@ endfunction
 function! notez#PrevJournal() abort " {{{1
     let l:current = expand('%:t:r')
     let l:start_of_week = s:parse_journal_filename(current)
-    let filename = substitute(system('date -d "' . start_of_week . ' - 7 days" +%Ywk%V'),"\\n","","")
-    exe 'edit '.printf("%s/%s.md", g:notez_journal_dir, filename)
+    let l:year_week = s:get_year_week_fmt(l:start_of_week.' - 7 days')
+    exe 'edit '.printf("%s/%s.md", g:notez_journal_dir, l:year_week)
 endfunction
 
 function! notez#NextJournal() abort " {{{1
     let l:current = expand('%:t:r')
     let l:start_of_week = s:parse_journal_filename(current)
-    let filename = substitute(system('date -d "' . start_of_week . ' + 7 days" +%Ywk%V'),"\\n","","")
-    exe 'edit '.printf("%s/%s.md", g:notez_journal_dir, filename)
+    let l:year_week = s:get_year_week_fmt(l:start_of_week.' + 7 days')
+    exe 'edit '.printf("%s/%s.md", g:notez_journal_dir, l:year_week)
 endfunction
 
 function! notez#NewNote(filename) abort " {{{1
