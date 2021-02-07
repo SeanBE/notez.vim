@@ -149,24 +149,28 @@ function! notez#SearchNotes() abort " {{{1
     execute "lcd ".l:curr_dir
 endfunction
 
-function! s:make_note_link(l) abort " {{{1
+function! s:make_note_link(lines) abort " {{{1
     " fzf#vim#complete returns a list with all info in index 0
-    let line = split(a:l[0], ':')
-    let ztk_id = l:line[0]
-    " extract top title from file
-    let ztk_title = substitute(l:line[1], '\#\s\+', '', 'g')
-    let mdlink = "[" . ztk_title ."](". ztk_id .")"
-    return mdlink
+    let line = split(a:lines[0], ':')
+    let path = l:line[0]
+    " remove hashtag from markdown header
+    let title = substitute(l:line[1], '\#\s\+', '', 'g')
+    return "[" . title ."](". path .")"
 endfunction
 
 function! notez#LinkNote() abort " {{{1
-    " Search for markdown files that have title starting with #.
+    " Search for markdown files that have lines starting with #
     " Using fzf#complete for fuzzy completion (delegates to fzf#vim#complete)
     " From comments https://www.edwinwenink.xyz/posts/48-vim_fast_creating_and_linking_notes/
+    " Uses first match of each candidate in completion window.
+    " TODO: use journal_dir variable to filter out
+    " TODO: push all top level markdown headers in files (drop -m1)
+    " TODO: append page number to link syntax
     return fzf#complete({
         \ 'dir': g:notez_dir,
-        \ 'source':  'rg -t md --no-heading --smart-case ^\#',
+        \ 'source':  'rg -m1 -t md -g "!journal/*" --no-heading --smart-case "^\#" --color always',
         \ 'reducer': function('s:make_note_link'),
-        \ 'options': '--reverse',
-        \ 'down': '10%'})
+        \ 'options': '--exact --ansi --reverse',
+        \ 'down': '30%'
+        \ })
 endfunction
