@@ -73,10 +73,12 @@ augroup notez#Journal " {{{1
 augroup end
 
 function! s:get_year_week_fmt(...) abort " {{{1
+    " convert now or first arg to %year%wk%ISO week number%
+    " e.g. get_year_week_fmt('2021-01-04') returns '2021wk04'
     let l:date = get(a:, 1, 0)
-    let l:yearWeek = system('date +%Ywk%V')
+    let l:yearWeek = system('date +%Gwk%V')
     if l:date
-        let l:yearWeek = system('date -d "'.l:date.'" +%Ywk%V')
+        let l:yearWeek = system('date -d "'.l:date.'" +%Gwk%V')
     endif
     return substitute(l:yearWeek,"\\n","","")
 endfunction
@@ -88,11 +90,14 @@ function! notez#OpenJournal() abort " {{{1
 endfunction
 
 function! s:parse_journal_filename(fname) abort " {{{1
+    " Given file_name, extract iso week number and year
+    " Calculate calendar date from week and year
+    " https://stackoverflow.com/a/46002400
+    " https://en.wikipedia.org/wiki/ISO_week_date#Calculating_an_ordinal_or_month_date_from_a_week_date
     let l:year=strpart(a:fname, 0, 4)
     let l:week=strpart(a:fname, 6, 2)
-    " httpsgg://stackoverflow.com/a/46002400
-    let l:start_of_week = substitute(system('date -d "'.year.'-01-01 +$(( '.week.' * 7 + 1 - $(date -d "2020-01-04" +%u ) - 3 )) days - 2 days + 1 days" +"%Y-%m-%d"'), "\\n","","")
-    return l:start_of_week
+    let l:start_of_week = system('date -d "'.year.'-01-01 +$(( '.week.' * 7 + 1 - $(date -d ""'.year.'"-01-04" +%u ) - 3 )) days - 2 days + 1 days" +"%Y-%m-%d"')
+    return substitute(l:start_of_week, "\\n","","")
 endfunction
 
 function! notez#PrevJournal() abort " {{{1
